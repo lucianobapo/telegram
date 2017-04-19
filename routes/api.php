@@ -21,3 +21,5 @@ Route::post('callback-web-hook/{token}', 'TelegramController@postWebHook');
 
 Route::get('set-web-hook',  'TelegramController@setWebHook');
 Route::get('get-web-hook',  'TelegramController@getWebHook');
+
+Route::get('messenger-web-hook',  'TelegramController@messengerWebHook');

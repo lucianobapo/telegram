@@ -218,4 +218,8 @@ class TelegramController extends Controller
         $messageId = $response->getMessageId();
         logger($messageId);
     }
+
+    public function messengerWebHook(Request $request){
+        logger($request);
+    }
 }
