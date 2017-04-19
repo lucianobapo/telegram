@@ -248,10 +248,10 @@ class TelegramController extends Controller
 //
 //                ]
 //            ];
-            $uri = env('MESSENGER_BOT_PAGE_URL');
+            $uri = 'me/messages';
 //            logger($uri);
 //
-            $client = new Client();
+            $client = new Client(['base_uri' => env('MESSENGER_BOT_PAGE_URL')]);
             $res = $client->request('POST', $uri, $options);
             logger($res->getStatusCode()) ;
             logger($res->getBody()) ;
