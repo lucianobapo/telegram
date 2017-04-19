@@ -219,10 +219,10 @@ class TelegramController extends Controller
         logger($messageId);
     }
 
-    public function messengerWebHook($params){
-        logger($params);
-        if (isset($params['hub_verify_token']) && $params['hub_verify_token']==env('MESSENGER_VERIFY_TOKEN')){
-            return response()->json($params['hub_challenge']);
+    public function messengerWebHook(Request $request){
+        logger($request);
+        if (isset($request['hub_verify_token']) && $request['hub_verify_token']==env('MESSENGER_VERIFY_TOKEN')){
+            return response()->json($request['hub_challenge']);
         }
     }
 }
