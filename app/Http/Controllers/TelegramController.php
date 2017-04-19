@@ -45,11 +45,20 @@ class TelegramController extends Controller
 //        logger($token);
         logger($fields);
         if ($token==env('TELEGRAM_BOT_TOKEN')){
-            if ($fields['message']['text']=='Voltar ao Início' || $fields['message']['text']=='/start')
-                $this->sendGreetings($fields);
 
-            if ($fields['message']['text']=='Solicitar Cardápio' || $fields['message']['text']=='/cardapio')
-                $this->sendMenu($fields);
+
+            if (isset($fields['message']['contact'])) $this->checkContact($fields);
+
+            if (isset($fields['message']['text'])){
+                if ($fields['message']['text']=='Voltar ao Início' || $fields['message']['text']=='/start')
+                    $this->sendGreetings($fields);
+
+                elseif ($fields['message']['text']=='Solicitar Cardápio' || $fields['message']['text']=='/cardapio')
+                    $this->sendMenu($fields);
+
+                else $this->commandFail($fields);
+            }
+
 
         }
 
@@ -152,6 +161,58 @@ class TelegramController extends Controller
         $response = $this->telegram->sendMessage([
             'chat_id' => $fields['message']['chat']['id'],
             'text' => 'Menu solicitado.',
+            'reply_markup' => $reply_markup
+        ]);
+        $messageId = $response->getMessageId();
+        logger($messageId);
+    }
+
+    private function checkContact($fields)
+    {
+//        $keyboard = [
+//            ['Solicitar Cardápio'],
+//            ['Fazer um Pedido'],
+//            ['Voltar ao Início'],
+//        ];
+//
+//        $reply_markup = $this->telegram->replyKeyboardMarkup([
+//            'keyboard' => $keyboard,
+//            'resize_keyboard' => true,
+//            'one_time_keyboard' => true
+//        ]);
+
+        $response = $this->telegram->sendMessage([
+            'chat_id' => $fields['message']['chat']['id'],
+            'text' => 'Encontramos: '.$fields['message']['contact']['first_name'].' - ID:'.$fields['message']['contact']['user_id'],
+//            'reply_markup' => $reply_markup
+        ]);
+        $messageId = $response->getMessageId();
+        logger($messageId);
+    }
+
+    private function commandFail($fields)
+    {
+        $sendContact =  (object) [
+            'text' => 'Enviar Meu Contato',
+            'request_contact' => true,
+            'request_location' => false
+        ];
+
+        $keyboard = [
+            [$sendContact],
+            ['Solicitar Cardápio'],
+            ['Voltar ao Início'],
+        ];
+
+        $reply_markup = $this->telegram->replyKeyboardMarkup([
+            'keyboard' => $keyboard,
+            'resize_keyboard' => true,
+            'one_time_keyboard' => true
+        ]);
+
+        $response = $this->telegram->sendMessage([
+            'chat_id' => $fields['message']['chat']['id'],
+            'text' => 'Ops! Infelizmente não entendemos seu pedido, por favor, escolha uma das opções abaixo:',
             'reply_markup' => $reply_markup
         ]);
         $messageId = $response->getMessageId();
