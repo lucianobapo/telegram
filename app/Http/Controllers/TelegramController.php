@@ -243,18 +243,18 @@ class TelegramController extends Controller
                 // When bot receive message from user
                 if (!empty($message['message'])) {
                     if(isset($message['message']['text'])) $command = $message['message']['text'];
-                    if(isset($message['message']['attachments'])) {
-                        foreach ($message['message']['attachments'] as $attachment){
-                            if($attachment['type']=='location'){
-                                $command = 'location';
-                                $coordinates = [
-                                    'lat' => $attachment['payload']['coordinates']['lat'],
-                                    'long' => $attachment['payload']['coordinates']['long'],
-                                ];
-                            }
-                        }
-
-                    }
+//                    if(isset($message['message']['attachments'])) {
+//                        foreach ($message['message']['attachments'] as $attachment){
+//                            if($attachment['type']=='location'){
+//                                $command = 'location';
+//                                $coordinates = [
+//                                    'lat' => $attachment['payload']['coordinates']['lat'],
+//                                    'long' => $attachment['payload']['coordinates']['long'],
+//                                ];
+//                            }
+//                        }
+//
+//                    }
                 // When bot receive button click from user
                 } else if (!empty($message['postback'])) {
                     $command = $message['postback']['payload'];
@@ -263,9 +263,9 @@ class TelegramController extends Controller
                 // Handle command
                 switch ($command) {
                     // When bot receive "text"
-                    case 'location':
-                        $this->sendFacebookMessage($message['sender']['id'], implode(',',$coordinates));
-                        break;
+//                    case 'location':
+//                        $this->sendFacebookMessage($message['sender']['id'], implode(',',$coordinates));
+//                        break;
                     case 'Mostrar Cardápio':
                         $this->sendFacebookMessage($message['sender']['id'], 'Cardápio:');
                         break;
@@ -324,18 +324,18 @@ class TelegramController extends Controller
         $bot = new FbBotApp(env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'));
         $bot->send(new Message($id, $string));
 
-        $message = new StructuredMessage($id,
-            StructuredMessage::TYPE_BUTTON,
-            [
-                'text' => 'Choose category',
-                'buttons' => [
-                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Fazer Pedido'),
-                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Mostrar Cardápio'),
-//                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Third button')
-                ]
-            ]
-        );
+//        $message = new StructuredMessage($id,
+//            StructuredMessage::TYPE_BUTTON,
+//            [
+//                'text' => 'Choose category',
+//                'buttons' => [
+//                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Fazer Pedido'),
+//                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Mostrar Cardápio'),
+////                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Third button')
+//                ]
+//            ]
+//        );
 //        logger($message->getData());
-        $bot->send($message);
+//        $bot->send($message);
     }
 }
