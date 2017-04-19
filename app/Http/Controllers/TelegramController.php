@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use pimax\FbBotApp;
+use pimax\Messages\Message;
 use Telegram\Bot\Api;
 
 class TelegramController extends Controller
@@ -226,26 +227,41 @@ class TelegramController extends Controller
             return $request['hub_challenge'];
         }
         if (isset($request['object']) && $request['object']=='page'){
-            $recipientId = $request['entry'][0]['messaging'][0]['recipient']['id'];
-            $messageText = $request['entry'][0]['messaging'][0]['message']['text'];
+            // Make Bot Instance
+            $bot = new FbBotApp(env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'));
 
-            $client = new Client();
-            $options = [
-                'verify' => false,
-                'form_params' => [
-                    'recipient' => [
-                        'id' => $recipientId,
-                    ],
-                    'message' => [
-                        'text' => $messageText,
-                    ],
-                ]
-            ];
-            $uri = env('MESSENGER_BOT_PAGE_URL') . '?access_token=' . env('MESSENGER_BOT_PAGE_ACCESS_TOKEN');
-            logger($uri);
-            $res = $client->request('POST', $uri, $options);
-            logger($res->getStatusCode()) ;
-            logger($res->getBody()) ;
+//            $recipientId = $request['entry'][0]['messaging'][0]['recipient']['id'];
+//            $messageText = $request['entry'][0]['messaging'][0]['message']['text'];
+
+            foreach ($request['entry'][0]['messaging'] as $message) {
+                $command = "";
+                // When bot receive message from user
+                if (!empty($message['message'])) {
+                    $command = $message['message']['text'];
+                    logger($command);
+                    $bot->send(new Message($message['sender']['id'], 'This is a simple text message.'.$command));
+                }
+
+            }
+
+//            $options = [
+//                'verify' => false,
+//                'form_params' => [
+//                    'recipient' => [
+//                        'id' => $recipientId,
+//                    ],
+//                    'message' => [
+//                        'text' => $messageText,
+//                    ],
+//                ]
+//            ];
+//            $uri = env('MESSENGER_BOT_PAGE_URL') . '?access_token=' . env('MESSENGER_BOT_PAGE_ACCESS_TOKEN');
+//            logger($uri);
+//
+//            $client = new Client();
+//            $res = $client->request('POST', $uri, $options);
+//            logger($res->getStatusCode()) ;
+//            logger($res->getBody()) ;
             // "200"
 //            echo $res->getHeader('content-type');
             // 'application/json; charset=utf8'
