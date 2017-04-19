@@ -233,16 +233,22 @@ class TelegramController extends Controller
             foreach ($request['entry'][0]['messaging'] as $message){
                 // Skipping delivery messages
                 if (!empty($message['delivery'])) {
+                    logger('Skipping delivery messages');
                     continue;
                 }
                 // skip the echo of my own messages
                 if (isset($message['message']['is_echo']) && ($message['message']['is_echo'] == "true")) {
+                    logger('skip the echo of my own messages');
                     continue;
                 }
                 $command = "";
                 // When bot receive message from user
                 if (!empty($message['message'])) {
-                    if(isset($message['message']['text'])) $command = $message['message']['text'];
+                    logger('When bot receive message from user');
+                    if(isset($message['message']['text'])) {
+                        $command = $message['message']['text'];
+                        logger('$command:'.$command);
+                    }
 //                    if(isset($message['message']['attachments'])) {
 //                        foreach ($message['message']['attachments'] as $attachment){
 //                            if($attachment['type']=='location'){
