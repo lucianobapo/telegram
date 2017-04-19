@@ -236,7 +236,7 @@ class TelegramController extends Controller
                     continue;
                 }
                 // skip the echo of my own messages
-                if (($message['message']['is_echo'] == "true")) {
+                if (isset($message['message']['is_echo']) && ($message['message']['is_echo'] == "true")) {
                     continue;
                 }
                 $command = "";
