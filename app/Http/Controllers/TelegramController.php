@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Telegram\Bot\Api;
 
@@ -221,8 +222,31 @@ class TelegramController extends Controller
 
     public function messengerWebHook(Request $request){
         logger($request);
-        if (isset($request['hub_verify_token']) && $request['hub_verify_token']==env('MESSENGER_VERIFY_TOKEN')){
+        if (isset($request['hub_verify_token']) && $request['hub_verify_token']==env('MESSENGER_BOT_VERIFY_TOKEN')){
             return $request['hub_challenge'];
+        }
+        if (isset($request['object']) && $request['object']=='page'){
+            $recipientId = $request['entry'][0]['messaging'][0]['recipient']['id'];
+            $messageText = $request['entry'][0]['messaging'][0]['message']['text'];
+
+            $client = new Client();
+            $res = $client->request('POST', env('MESSENGER_BOT_PAGE_URL').'?access_token='.env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'), [
+                'form_params' => [
+                    'recipient' => [
+                        'id' => $recipientId,
+                    ],
+                    'message' => [
+                        'text' => $messageText,
+                    ],
+                ]
+            ]);
+            logger($res->getStatusCode()) ;
+            logger($res->getBody()) ;
+            // "200"
+//            echo $res->getHeader('content-type');
+            // 'application/json; charset=utf8'
+//            echo $res->getBody();
+            // {"type":"User"...'
         }
     }
 }
