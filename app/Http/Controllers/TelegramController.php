@@ -231,6 +231,7 @@ class TelegramController extends Controller
             $messageText = $request['entry'][0]['messaging'][0]['message']['text'];
 
             $options = [
+                'verify' => false,
                 'json' => [
                     'access_token' => env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'),
                     'recipient' => [
