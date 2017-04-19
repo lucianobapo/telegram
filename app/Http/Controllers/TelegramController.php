@@ -227,11 +227,11 @@ class TelegramController extends Controller
         }
         if (isset($request['object']) && $request['object']=='page'){
 
-            $recipientId = $request['entry'][0]['messaging'][0]['recipient']['id'];
+            $recipientId = $request['entry'][0]['messaging'][0]['sender']['id'];
             $messageText = $request['entry'][0]['messaging'][0]['message']['text'];
 
             $options = [
-                'verify' => false,
+//                'verify' => false,
                 'json' => [
                     'access_token' => env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'),
                     'recipient' => [
