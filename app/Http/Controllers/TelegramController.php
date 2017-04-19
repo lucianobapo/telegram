@@ -276,12 +276,13 @@ class TelegramController extends Controller
                     'id' => $id,
                 ],
                 'message' => [
-                    'text' => $string,
+//                    'text' => $string,
                     'attachment' => [
                         'type'=>'template',
                         'payload'=>[
                             'template_type'=>'button',
-                            'text' => 'Escolha uma opção:',
+//                            'text' => 'Escolha uma opção:',
+                            'text' => $string,
                             'buttons'=>[
                                 [
                                     'type' => 'postback',
