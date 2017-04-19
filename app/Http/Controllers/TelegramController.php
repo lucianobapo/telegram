@@ -281,8 +281,12 @@ class TelegramController extends Controller
 
                     // Other message received
                     default:
-                        if (!empty($command)) // otherwise "empty message" wont be understood either
+                        logger('Other message received');
+                        // otherwise "empty message" wont be understood either
+                        if (!empty($command)) {
+                            logger('sendFacebookMessage');
                             $this->sendFacebookMessage($message['sender']['id'], 'Desculpe, não entendi sua mensagem.');
+                        }
                 }
             }
         }
