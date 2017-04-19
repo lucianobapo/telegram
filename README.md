@@ -19,4 +19,5 @@ cd ~/code/erpnet-v5 && composer update
 
 git cmt && ssh telegram.ilhanet.com
 cd ~/code/telegram/ && git pull && composer install && exit
+cd ~/code/telegram/ && git pull && exit
 ```

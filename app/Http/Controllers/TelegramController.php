@@ -11,7 +11,7 @@ class TelegramController extends Controller
 
     public function __construct() {
         $this->telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
-        dd($this->telegram->getUpdates());
+//        dd($this->telegram->getUpdates());
     }
 
     public function getUpdates()
