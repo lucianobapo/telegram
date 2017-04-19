@@ -320,7 +320,7 @@ class TelegramController extends Controller
                 ]
             ]
         );
-        logger($message->getData());
+//        logger($message->getData());
         $bot->send($message);
     }
 }
