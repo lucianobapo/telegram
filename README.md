@@ -5,6 +5,7 @@
 ssh telegram.ilhanet.com
 cd ~/code/ && git clone https://github.com/lucianobapo/telegram.git && exit
 rsync -rvztPhe ssh /home/luciano/code/telegram/.env.production telegram.ilhanet.com:code/telegram/.env
+cd ~/code/telegram/ && git pull && composer install
 sudo ./permissions.sh
 php artisan migrate
 ```
@@ -17,5 +18,5 @@ cd ~/code/erpnet-v5/packages/erpnet-models && git cmt
 cd ~/code/erpnet-v5 && composer update
 
 git cmt && ssh telegram.ilhanet.com
-cd ~/code/erpnet-v5/ && git pull && composer install && exit
+cd ~/code/telegram/ && git pull && composer install && exit
 ```
