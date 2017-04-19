@@ -239,7 +239,19 @@ class TelegramController extends Controller
                 if (!empty($message['message'])) {
                     $command = $message['message']['text'];
                     logger($command);
-                    $bot->send(new Message($message['sender']['id'], 'This is a simple text message.'.$command));
+//                    $bot->send(new Message($message['sender']['id'], 'This is a simple text message.'.$command));
+                }
+
+                // Handle command
+                switch ($command) {
+                    // When bot receive "text"
+                    case 'text':
+                        $bot->send(new Message($message['sender']['id'], 'This is a simple text message.'));
+                        break;
+
+                    default:
+                        if (!empty($command)) // otherwise "empty message" wont be understood either
+                            $bot->send(new Message($message['sender']['id'], 'Sorry. I don’t understand you.'));
                 }
 
             }
