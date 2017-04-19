@@ -41,12 +41,14 @@ class TelegramController extends Controller
     }
 
     public function postWebHook(Request $request, $token){
-        if ($token==env('TELEGRAM_BOT_TOKEN')){
+        $fields = $request->all();
 
-        }
         logger($token);
-        logger($request->all());
-//        logger(func_get_args());
+        logger($fields);
+        if ($token==env('TELEGRAM_BOT_TOKEN') && $fields['message']['text']=='/start'){
+            logger($fields['message']['text']);
+        }
+
     }
 
     public function postSendMessage(Request $request)

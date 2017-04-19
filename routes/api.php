@@ -18,4 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('callback-web-hook/{token}', 'TelegramController@postWebHook');
+
+Route::get('set-web-hook',  'TelegramController@setWebHook');
 Route::get('get-web-hook',  'TelegramController@getWebHook');
