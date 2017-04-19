@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use pimax\FbBotApp;
+use pimax\Messages\Message;
+use pimax\Messages\MessageButton;
+use pimax\Messages\StructuredMessage;
 use Telegram\Bot\Api;
 
 class TelegramController extends Controller
@@ -226,40 +230,80 @@ class TelegramController extends Controller
             return $request['hub_challenge'];
         }
         if (isset($request['object']) && $request['object']=='page'){
+            foreach ($request['entry'][0]['messaging'] as $message){
+                // Skipping delivery messages
+                if (!empty($message['delivery'])) {
+                    continue;
+                }
+                // skip the echo of my own messages
+                if (($message['message']['is_echo'] == "true")) {
+                    continue;
+                }
+                $command = "";
+                // When bot receive message from user
+                if (!empty($message['message'])) {
+                    $command = $message['message']['text'];
+                // When bot receive button click from user
+                } else if (!empty($message['postback'])) {
+                    $command = $message['postback']['payload'];
+                }
 
-            $recipientId = $request['entry'][0]['messaging'][0]['sender']['id'];
-            $messageText = $request['entry'][0]['messaging'][0]['message']['text'];
+                // Handle command
+                switch ($command) {
+                    // When bot receive "text"
+                    case 'text':
+//                        $bot->send(new Message($message['sender']['id'], 'This is a simple text message.'));
+                        break;
 
-            $options = [
-//                'verify' => false,
-                'json' => [
-                    'access_token' => env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'),
-                    'recipient' => [
-                        'id' => $recipientId,
-                    ],
-                    'message' => [
-                        'text' => $messageText,
-                    ],
-                ]
-            ];
-//                [
-//                'verify' => false,
-//                'form_params' => [
-//
-//                ]
-//            ];
-            $uri = 'me/messages';
-//            logger($uri);
-//
-            $client = new Client(['base_uri' => env('MESSENGER_BOT_PAGE_URL')]);
-            $res = $client->request('POST', $uri, $options);
-            logger($res->getStatusCode()) ;
-            logger($res->getBody()) ;
-            // "200"
-//            echo $res->getHeader('content-type');
-            // 'application/json; charset=utf8'
-//            echo $res->getBody();
-            // {"type":"User"...'
+                    // Other message received
+                    default:
+                        if (!empty($command)) // otherwise "empty message" wont be understood either
+                            $this->sendFacebookMessage($message['sender']['id'], 'Desculpe, não entendi sua mensagem.');
+                }
+            }
         }
+    }
+
+    private function sendFacebookMessage($id, $string)
+    {
+//        $options = [
+//            'json' => [
+//                'access_token' => env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'),
+//                'recipient' => [
+//                    'id' => $id,
+//                ],
+//                'message' => [
+//                    'text' => $string,
+//                    'attachment' => [
+//                        'type'=>'template',
+//                        'payload'=>[
+//                            'template_type'=>'buttons',
+//                            'elements'=>[
+//
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ]
+//        ];
+//        $client = new Client(['base_uri' => env('MESSENGER_BOT_PAGE_URL')]);
+//        $res = $client->request('POST', 'me/messages', $options);
+//        logger($res->getStatusCode()) ;
+//        logger($res->getBody()) ;
+
+        // Make Bot Instance
+        $bot = new FbBotApp(env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'));
+        $bot->send(new Message($id, $string));
+        $bot->send(new StructuredMessage($id,
+            StructuredMessage::TYPE_BUTTON,
+            [
+                'text' => 'Choose category',
+                'buttons' => [
+                    new MessageButton(MessageButton::TYPE_POSTBACK, 'First button'),
+                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Second button'),
+                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Third button')
+                ]
+            ]
+        ));
     }
 }
