@@ -29,7 +29,7 @@ class TelegramController extends Controller
     }
 
     public function getWebHook(){
-        $response = $this->telegram->getWebhookInfo();
+        $response = $this->telegram->getWebhookUpdates();
         dd($response);
     }
 
