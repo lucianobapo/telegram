@@ -294,7 +294,8 @@ class TelegramController extends Controller
         // Make Bot Instance
         $bot = new FbBotApp(env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'));
         $bot->send(new Message($id, $string));
-        $bot->send(new StructuredMessage($id,
+
+        $message = new StructuredMessage($id,
             StructuredMessage::TYPE_BUTTON,
             [
                 'text' => 'Choose category',
@@ -304,6 +305,8 @@ class TelegramController extends Controller
                     new MessageButton(MessageButton::TYPE_POSTBACK, 'Third button')
                 ]
             ]
-        ));
+        );
+        logger($message->getData());
+        $bot->send($message);
     }
 }
