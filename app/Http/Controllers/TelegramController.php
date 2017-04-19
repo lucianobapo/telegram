@@ -222,7 +222,7 @@ class TelegramController extends Controller
     public function messengerWebHook(Request $request){
         logger($request);
         if (isset($request['hub_verify_token']) && $request['hub_verify_token']==env('MESSENGER_VERIFY_TOKEN')){
-            return response()->json($request['hub_challenge']);
+            return $request['hub_challenge'];
         }
     }
 }
