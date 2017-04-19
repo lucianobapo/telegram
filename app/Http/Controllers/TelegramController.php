@@ -251,8 +251,11 @@ class TelegramController extends Controller
                 // Handle command
                 switch ($command) {
                     // When bot receive "text"
-                    case 'text':
-//                        $bot->send(new Message($message['sender']['id'], 'This is a simple text message.'));
+                    case 'Mostrar Cardápio':
+                        $this->sendFacebookMessage($message['sender']['id'], 'Cardápio:');
+                        break;
+                    case 'Fazer Pedido':
+                        $this->sendFacebookMessage($message['sender']['id'], 'Pedido:');
                         break;
 
                     // Other message received
@@ -266,47 +269,57 @@ class TelegramController extends Controller
 
     private function sendFacebookMessage($id, $string)
     {
-//        $options = [
-//            'json' => [
-//                'access_token' => env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'),
-//                'recipient' => [
-//                    'id' => $id,
-//                ],
-//                'message' => [
-//                    'text' => $string,
-//                    'attachment' => [
-//                        'type'=>'template',
-//                        'payload'=>[
-//                            'template_type'=>'buttons',
-//                            'elements'=>[
-//
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ]
-//        ];
-//        $client = new Client(['base_uri' => env('MESSENGER_BOT_PAGE_URL')]);
-//        $res = $client->request('POST', 'me/messages', $options);
-//        logger($res->getStatusCode()) ;
-//        logger($res->getBody()) ;
+        $options = [
+            'json' => [
+                'access_token' => env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'),
+                'recipient' => [
+                    'id' => $id,
+                ],
+                'message' => [
+                    'text' => $string,
+                    'attachment' => [
+                        'type'=>'template',
+                        'payload'=>[
+                            'template_type'=>'button',
+                            'text' => 'Escolha uma opção:',
+                            'buttons'=>[
+                                [
+                                    'type' => 'postback',
+                                    'title' => 'Mostrar Cardápio',
+                                    'payload' => 'Mostrar Cardápio',
+                                ],
+                                [
+                                    'type' => 'postback',
+                                    'title' => 'Fazer Pedido',
+                                    'payload' => 'Fazer Pedido',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        ];
+        $client = new Client(['base_uri' => env('MESSENGER_BOT_PAGE_URL')]);
+        $res = $client->request('POST', 'me/messages', $options);
+        logger($res->getStatusCode()) ;
+        logger($res->getBody()) ;
 
         // Make Bot Instance
-        $bot = new FbBotApp(env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'));
-        $bot->send(new Message($id, $string));
-
-        $message = new StructuredMessage($id,
-            StructuredMessage::TYPE_BUTTON,
-            [
-                'text' => 'Choose category',
-                'buttons' => [
-                    new MessageButton(MessageButton::TYPE_POSTBACK, 'First button'),
-                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Second button'),
-                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Third button')
-                ]
-            ]
-        );
-        logger($message->getData());
-        $bot->send($message);
+//        $bot = new FbBotApp(env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'));
+//        $bot->send(new Message($id, $string));
+//
+//        $message = new StructuredMessage($id,
+//            StructuredMessage::TYPE_BUTTON,
+//            [
+//                'text' => 'Choose category',
+//                'buttons' => [
+//                    new MessageButton(MessageButton::TYPE_POSTBACK, 'First button'),
+//                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Second button'),
+//                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Third button')
+//                ]
+//            ]
+//        );
+//        logger($message->getData());
+//        $bot->send($message);
     }
 }
