@@ -28,6 +28,11 @@ class TelegramController extends Controller
         return view('send-message');
     }
 
+    public function getWebHook(){
+        $response = $this->telegram->getWebhookInfo();
+        dd($response);
+    }
+
     public function setWebHook(){
         $response = $this->telegram->setWebhook([
             'url' => 'https://telegram.ilhanet.com/send-web-hook/'.env('TELEGRAM_BOT_TOKEN')

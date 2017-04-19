@@ -18,5 +18,6 @@ Route::get('/', function () {
 Route::get('get-updates',   'TelegramController@getUpdates');
 Route::get('send-message',  'TelegramController@getSendMessage');
 Route::get('set-web-hook',  'TelegramController@setWebHook');
+Route::get('get-web-hook',  'TelegramController@getWebHook');
 Route::post('send-message', 'TelegramController@postSendMessage');
 Route::post('send-web-hook/{token}', 'TelegramController@postWebHook');
