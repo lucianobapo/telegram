@@ -230,16 +230,15 @@ class TelegramController extends Controller
             $messageText = $request['entry'][0]['messaging'][0]['message']['text'];
 
             $client = new Client();
-            $res = $client->request('POST', env('MESSENGER_BOT_PAGE_URL').'?access_token='.env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'), [
-                'form_params' => [
-                    'recipient' => [
-                        'id' => $recipientId,
-                    ],
-                    'message' => [
-                        'text' => $messageText,
-                    ],
-                ]
-            ]);
+            $options = [
+                'recipient' => [
+                    'id' => $recipientId,
+                ],
+                'message' => [
+                    'text' => $messageText,
+                ],
+            ];
+            $res = $client->request('POST', env('MESSENGER_BOT_PAGE_URL').'?access_token='.env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'), $options);
             logger($res->getStatusCode()) ;
             logger($res->getBody()) ;
             // "200"
