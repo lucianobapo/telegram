@@ -269,58 +269,58 @@ class TelegramController extends Controller
 
     private function sendFacebookMessage($id, $string)
     {
-        $options = [
-            'json' => [
-                'access_token' => env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'),
-                'recipient' => [
-                    'id' => $id,
-                ],
-                'message' => [
-//                    'text' => $string,
-                    'attachment' => [
-                        'type'=>'template',
-                        'payload'=>[
-                            'template_type'=>'button',
-//                            'text' => 'Escolha uma opção:',
-                            'text' => $string,
-                            'buttons'=>[
-                                [
-                                    'type' => 'postback',
-                                    'title' => 'Mostrar Cardápio',
-                                    'payload' => 'Mostrar Cardápio',
-                                ],
-                                [
-                                    'type' => 'postback',
-                                    'title' => 'Fazer Pedido',
-                                    'payload' => 'Fazer Pedido',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ]
-        ];
-        $client = new Client(['base_uri' => env('MESSENGER_BOT_PAGE_URL')]);
-        $res = $client->request('POST', 'me/messages', $options);
-        logger($res->getStatusCode()) ;
-        logger($res->getBody()) ;
+//        $options = [
+//            'json' => [
+//                'access_token' => env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'),
+//                'recipient' => [
+//                    'id' => $id,
+//                ],
+//                'message' => [
+////                    'text' => $string,
+//                    'attachment' => [
+//                        'type'=>'template',
+//                        'payload'=>[
+//                            'template_type'=>'button',
+////                            'text' => 'Escolha uma opção:',
+//                            'text' => $string,
+//                            'buttons'=>[
+//                                [
+//                                    'type' => 'postback',
+//                                    'title' => 'Mostrar Cardápio',
+//                                    'payload' => 'Mostrar Cardápio',
+//                                ],
+//                                [
+//                                    'type' => 'postback',
+//                                    'title' => 'Fazer Pedido',
+//                                    'payload' => 'Fazer Pedido',
+//                                ],
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ]
+//        ];
+//        $client = new Client(['base_uri' => env('MESSENGER_BOT_PAGE_URL')]);
+//        $res = $client->request('POST', 'me/messages', $options);
+//        logger($res->getStatusCode()) ;
+//        logger($res->getBody()) ;
 
         // Make Bot Instance
-//        $bot = new FbBotApp(env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'));
-//        $bot->send(new Message($id, $string));
-//
-//        $message = new StructuredMessage($id,
-//            StructuredMessage::TYPE_BUTTON,
-//            [
-//                'text' => 'Choose category',
-//                'buttons' => [
-//                    new MessageButton(MessageButton::TYPE_POSTBACK, 'First button'),
-//                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Second button'),
+        $bot = new FbBotApp(env('MESSENGER_BOT_PAGE_ACCESS_TOKEN'));
+        $bot->send(new Message($id, $string));
+
+        $message = new StructuredMessage($id,
+            StructuredMessage::TYPE_BUTTON,
+            [
+                'text' => 'Choose category',
+                'buttons' => [
+                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Fazer Pedido'),
+                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Mostrar Cardápio'),
 //                    new MessageButton(MessageButton::TYPE_POSTBACK, 'Third button')
-//                ]
-//            ]
-//        );
-//        logger($message->getData());
-//        $bot->send($message);
+                ]
+            ]
+        );
+        logger($message->getData());
+        $bot->send($message);
     }
 }
